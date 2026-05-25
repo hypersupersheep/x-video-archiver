@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>X Video Archiver</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero" aria-labelledby="title">
+        <div class="brand">
+          <span class="brand-mark">X</span>
+          <span>X Video Archiver</span>
+        </div>
+        <h1 id="title">保存授权的 X 短视频</h1>
+        <form id="resolve-form" class="resolver">
+          <label for="url">Post URL</label>
+          <div class="input-row">
+            <input
+              id="url"
+              name="url"
+              inputmode="url"
+              autocomplete="url"
+              placeholder="https://x.com/user/status/..."
+              required
+            />
+            <button type="submit">解析</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="result" class="result" hidden aria-live="polite"></section>
+    </main>
+    <script src="/static/app.js" type="module"></script>
+  </body>
+</html>
