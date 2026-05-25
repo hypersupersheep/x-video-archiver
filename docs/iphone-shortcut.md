@@ -66,9 +66,28 @@ Add this header to the first `Get Contents of URL` action:
 Authorization: Bearer <long-random-string>
 ```
 
+For posts that need browser login context, start the backend with:
+
+```bash
+X_VIDEO_COOKIES_FROM_BROWSER=chrome .venv/bin/uvicorn x_video_tool.server:app --host 0.0.0.0 --port 8000
+```
+
+For long videos, disable the default 600-second limit:
+
+```bash
+X_VIDEO_MAX_DURATION_SECONDS=0 .venv/bin/uvicorn x_video_tool.server:app --host 0.0.0.0 --port 8000
+```
+
+Both can be combined:
+
+```bash
+X_VIDEO_COOKIES_FROM_BROWSER=chrome X_VIDEO_MAX_DURATION_SECONDS=0 .venv/bin/uvicorn x_video_tool.server:app --host 0.0.0.0 --port 8000
+```
+
 ## Common Failures
 
 - `401 Missing or invalid API token`: the server expects a token and the shortcut did not send it.
 - `No direct mp4 video variants`: the post has no direct MP4 variant, or it is not a video post.
 - `Cookies file not found`: `X_VIDEO_COOKIES_FILE` points to a file that does not exist.
+- `Video is ... max allowed`: the post is longer than the configured duration limit.
 - The iPhone cannot connect: the Mac and iPhone are not on the same network, the server is not running, or macOS blocked incoming connections.

@@ -31,6 +31,13 @@ The resolver only accepts `x.com` and `twitter.com` status URLs. It returns dire
 
 By default, it also rejects videos longer than 600 seconds. That keeps the first version focused on short clips and reduces accidental server abuse.
 
+Some posts require authenticated context. The service supports two local-only options:
+
+- `X_VIDEO_COOKIES_FILE`: read a Netscape-format cookies file.
+- `X_VIDEO_COOKIES_FROM_BROWSER`: ask `yt-dlp` to read cookies from a local browser profile such as `chrome` or `safari`.
+
+Treat both as private deployment modes. They can let API callers resolve content using the server owner's browser session.
+
 ## Deployment Options
 
 - Local Wi-Fi: easiest to test, but the Mac must stay on.

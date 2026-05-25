@@ -109,6 +109,20 @@ If you add a cookies file for posts that need login context, keep it local and n
 export X_VIDEO_COOKIES_FILE="/path/to/browser-cookies-file"
 ```
 
+You can also let `yt-dlp` read cookies from a local browser profile:
+
+```bash
+export X_VIDEO_COOKIES_FROM_BROWSER="chrome"
+```
+
+The browser account does not need to match the phone account. It only needs permission to view the post. Keep this mode private: any caller using your API may indirectly use that browser session for resolution.
+
+The default maximum duration is 600 seconds. Set it to `0` to disable that guardrail:
+
+```bash
+export X_VIDEO_MAX_DURATION_SECONDS=0
+```
+
 ## Tests
 
 ```bash

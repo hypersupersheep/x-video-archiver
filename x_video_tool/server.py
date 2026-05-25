@@ -43,6 +43,7 @@ def require_token(
 def resolver_config() -> ResolverConfig:
     return ResolverConfig(
         cookies_file=settings.cookies_file,
+        cookies_from_browser=settings.cookies_from_browser,
         max_duration_seconds=settings.max_duration_seconds,
         request_timeout_seconds=settings.request_timeout_seconds,
     )

@@ -26,6 +26,7 @@ class ResolveError(Exception):
 @dataclass(frozen=True)
 class ResolverConfig:
     cookies_file: str | None = None
+    cookies_from_browser: str | None = None
     max_duration_seconds: int = 600
     request_timeout_seconds: int = 45
 
@@ -74,6 +75,11 @@ def resolve_video(raw_url: str, config: ResolverConfig) -> dict[str, Any]:
             raise ResolveError(f"Cookies file not found: {cookies_path}")
         ydl_opts["cookiefile"] = str(cookies_path)
 
+    if config.cookies_from_browser:
+        ydl_opts["cookiesfrombrowser"] = parse_cookies_from_browser(
+            config.cookies_from_browser
+        )
+
     try:
         with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
@@ -83,6 +89,36 @@ def resolve_video(raw_url: str, config: ResolverConfig) -> dict[str, Any]:
         raise ResolveError(f"Unexpected extractor error: {exc}") from exc
 
     return build_response(url, info, config)
+
+
+def parse_cookies_from_browser(raw_value: str) -> tuple[str, str | None, str | None, str | None]:
+    """Parse a small subset of yt-dlp's browser cookie syntax.
+
+    Accepted values:
+    - chrome
+    - safari
+    - chrome:Profile 1
+    - firefox:default-release::container
+    """
+
+    value = raw_value.strip()
+    if not value:
+        raise ResolveError("X_VIDEO_COOKIES_FROM_BROWSER is empty.")
+
+    browser_and_profile, _, container = value.partition("::")
+    browser_part, _, profile = browser_and_profile.partition(":")
+    browser, _, keyring = browser_part.partition("+")
+
+    browser = browser.strip().lower()
+    if not browser:
+        raise ResolveError("Browser name is missing in X_VIDEO_COOKIES_FROM_BROWSER.")
+
+    return (
+        browser,
+        profile.strip() or None,
+        keyring.strip().upper() or None,
+        container.strip() or None,
+    )
 
 
 def build_response(source_url: str, info: dict[str, Any], config: ResolverConfig) -> dict[str, Any]:

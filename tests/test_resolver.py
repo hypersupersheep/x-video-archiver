@@ -5,6 +5,7 @@ from x_video_tool.resolver import (
     ResolverConfig,
     build_response,
     normalize_x_url,
+    parse_cookies_from_browser,
 )
 
 
@@ -80,3 +81,16 @@ def test_build_response_rejects_long_video():
             info,
             ResolverConfig(max_duration_seconds=600),
         )
+
+
+def test_parse_cookies_from_browser_browser_only():
+    assert parse_cookies_from_browser("chrome") == ("chrome", None, None, None)
+
+
+def test_parse_cookies_from_browser_profile():
+    assert parse_cookies_from_browser("chrome:Profile 1") == (
+        "chrome",
+        "Profile 1",
+        None,
+        None,
+    )
